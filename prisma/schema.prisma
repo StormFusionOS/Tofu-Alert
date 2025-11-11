@@ -1,0 +1,90 @@
+// This is your Prisma schema file
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String                  @id @default(cuid())
+  twitchUserId     String                  @unique
+  login            String
+  displayName      String
+  profileImageUrl  String?
+  createdAt        DateTime                @default(now())
+  updatedAt        DateTime                @updatedAt
+  // relationships
+  alerts           Alert[]
+  triggers         Trigger[]
+  subscription     SubscriptionSnapshot?
+}
+
+model SubscriptionSnapshot {
+  id               String   @id @default(cuid())
+  userId           String   @unique
+  tier             Int      // 1000/2000/3000; we enforce 3000
+  isGift           Boolean  @default(false)
+  isActive         Boolean  @default(true)
+  checkedAt        DateTime @default(now())
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Alert {
+  id               String    @id @default(cuid())
+  userId           String
+  status           String    // 'pending' | 'approved' | 'denied'
+  denialReason     String?
+  srcUrl           String    // raw upload
+  cdnUrl           String?   // transcoded/normalized delivery asset
+  mimeType         String
+  durationSec      Int
+  audioLufs        Float?
+  hashes           String?   // perceptual/audio hash for duplicate detection
+  policyFlags      String?   // JSON: categories matched
+  createdAt        DateTime  @default(now())
+  reviewedAt       DateTime?
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reviews          Review[]
+  triggers         Trigger[]
+
+  @@index([userId])
+  @@index([status])
+}
+
+model Review {
+  id               String   @id @default(cuid())
+  alertId          String
+  stage            String   // 'heuristic' | 'stt' | 'ocr' | 'llm' | 'manual'
+  verdict          String   // 'pass' | 'fail' | 'escalate'
+  details          String?  // JSON trace / explanation
+  createdAt        DateTime @default(now())
+  alert            Alert    @relation(fields: [alertId], references: [id], onDelete: Cascade)
+
+  @@index([alertId])
+  @@index([stage])
+}
+
+model Trigger {
+  id               String   @id @default(cuid())
+  userId           String
+  alertId          String
+  triggeredAt      DateTime @default(now())
+  chatMessageId    String?  // message id we replied to (for audit)
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  alert            Alert    @relation(fields: [alertId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([triggeredAt])
+}
+
+model Settings {
+  id               Int      @id @default(1)
+  alertsMuted      Boolean  @default(false)   // global kill switch
+  cooldownHours    Int      @default(24)      // per-user rolling cooldown
+  maxDurationSec   Int      @default(10)
+  maxFileSizeMB    Int      @default(25)
+}

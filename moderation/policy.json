@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "deny_on_uncertain": true,
+  "categories": {
+    "sexual": {
+      "deny": true,
+      "notes": "Any sexual content, nudity, sexualized sounds, explicit moans, fetish references, or sexual innuendo toward real persons"
+    },
+    "hate": {
+      "deny": true,
+      "notes": "Hateful conduct, slurs, derogatory epithets"
+    },
+    "harassment": {
+      "deny": true,
+      "notes": "Demeaning stereotypes, targeted harassment"
+    },
+    "violence_or_threats": {
+      "deny": true,
+      "notes": "Violent threats, depiction/celebration of serious violence"
+    },
+    "self_harm": {
+      "deny": true,
+      "notes": "Self-harm content or encouragement"
+    },
+    "illegal_or_dangerous": {
+      "deny": true,
+      "notes": "Illegal/dangerous activities advocacy (drugs, weapons, crime), instructions, or glorification"
+    },
+    "privacy_doxxing": {
+      "deny": true,
+      "notes": "Personal data: phone numbers, addresses, emails, or links soliciting off-platform contact"
+    },
+    "minors": {
+      "deny": true,
+      "notes": "Any reference sexualizing minors or ambiguous age. Zero tolerance."
+    },
+    "political_persuasion": {
+      "deny": true,
+      "notes": "Persuasive political content"
+    },
+    "copyright_music": {
+      "deny": true,
+      "notes": "Any third-party music/sfx you don't own or have a license for"
+    },
+    "profanity_targeted": {
+      "deny": true,
+      "notes": "Profanity directed at a person/group or sexual in nature"
+    },
+    "profanity_general": {
+      "deny": false,
+      "notes": "Soft profanity allowed if not targeted and not sexual"
+    },
+    "other": {
+      "deny": true,
+      "notes": "Borderline/ambiguous content - deny by default"
+    }
+  },
+  "confidence_threshold": 0.90,
+  "max_duration_sec": 10,
+  "blocklist": {
+    "domains": [
+      "onlyfans.com",
+      "pornhub.com",
+      "xvideos.com"
+    ],
+    "phrases": [
+      "kill yourself",
+      "kys",
+      "f*gg*t",
+      "n*gg*r",
+      "tr*nny"
+    ]
+  },
+  "allowed_mime_types": [
+    "video/mp4",
+    "video/webm",
+    "audio/wav",
+    "audio/mp3",
+    "audio/mpeg"
+  ]
+}
