@@ -53,6 +53,9 @@ model Alert {
 
   @@index([userId])
   @@index([status])
+  @@index([userId, status, createdAt]) // Composite index for user alert queries
+  @@index([status, createdAt]) // For admin queue queries
+  @@index([hashes]) // For duplicate detection
 }
 
 model Review {
@@ -79,6 +82,8 @@ model Trigger {
 
   @@index([userId])
   @@index([triggeredAt])
+  @@index([userId, triggeredAt]) // Composite for cooldown queries
+  @@index([alertId]) // For alert trigger stats
 }
 
 model Settings {
